@@ -60,13 +60,67 @@ public class DatabaseManager {
             // BUAT TABEL-TABEL KALIAN DISINI
             // Gunakan CREATE TABLE IF NOT EXISTS agar aman dijalankan berulang.
             // =============================================
-
-            // Contoh (hapus dan ganti dengan tabel kalian):
             stmt.execute(
-                "CREATE TABLE IF NOT EXISTS contoh ("
+                "CREATE TABLE IF NOT EXISTS users ("
                 + "  id TEXT PRIMARY KEY,"
-                + "  nama TEXT NOT NULL,"
+                + "  name TEXT NOT NULL,"
+                + "  email TEXT NOT NULL UNIQUE,"
+                + "  phone TEXT,"
+                + "  role TEXT DEFAULT 'buyer', -- 'buyer' atau 'organizer'"
                 + "  created_at TEXT DEFAULT (datetime('now'))"
+                + ")"
+            );
+
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS venues ("
+                + "  id TEXT PRIMARY KEY,"
+                + "  name TEXT NOT NULL,"
+                + "  address TEXT NOT NULL,"
+                + "  max_capacity INTEGER NOT NULL,"
+                + "  created_at TEXT DEFAULT (datetime('now'))"
+                + ")"
+            );
+
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS events ("
+                + "  id TEXT PRIMARY KEY,"
+                + "  type TEXT NOT NULL, -- 'concert', 'seminar', 'sport_match'"
+                + "  name TEXT NOT NULL,"
+                + "  venue_id TEXT NOT NULL,"
+                + "  organizer_id TEXT NOT NULL, -- FK ke users (role = 'organizer')"
+                + "  date TEXT NOT NULL, -- format: YYYY-MM-DD"
+                + "  base_price REAL NOT NULL,"
+                + "  created_at TEXT DEFAULT (datetime('now')),"
+                + "  FOREIGN KEY (venue_id) REFERENCES venues(id),"
+                + "  FOREIGN KEY (organizer_id) REFERENCES users(id)"
+                + ")"
+            );
+
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS capacities ("
+                + "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                + "  event_id TEXT NOT NULL,"
+                + "  category TEXT NOT NULL, -- 'vip', 'regular', 'festival', 'tribune', 'vvip'"
+                + "  total INTEGER NOT NULL,"
+                + "  filled INTEGER DEFAULT 0,"
+                + "  FOREIGN KEY (event_id) REFERENCES events(id)"
+                + ")"
+            );
+
+            stmt.execute(
+                "CREATE TABLE IF NOT EXISTS tickets ("
+                + "  id TEXT PRIMARY KEY,"
+                + "  event_id TEXT NOT NULL,"
+                + "  user_id TEXT NOT NULL, -- FK ke users"
+                + "  category TEXT NOT NULL,"
+                + "  quantity INTEGER NOT NULL,"
+                + "  unit_price REAL NOT NULL,"
+                + "  total_price REAL NOT NULL,"
+                + "  purchase_date TEXT DEFAULT (date('now')),"
+                + "  status TEXT DEFAULT 'active', -- 'active', 'refunded'"
+                + "  refund_amount REAL DEFAULT 0,"
+                + "  FOREIGN KEY (event_id) REFERENCES events(id),"
+                + "  FOREIGN KEY (user_id) REFERENCES users(id)"
                 + ")"
             );
 
