@@ -1,5 +1,8 @@
 package model;
 
-public class Refundable {
-    
+public interface Refundable {
+
+    double calculateRefund(int daysBeforeEvent);
+
+    boolean isRefundable();
 }
