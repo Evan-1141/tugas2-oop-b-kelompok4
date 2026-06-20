@@ -4,9 +4,9 @@ public class SportMatch extends Event {
 
     private String team;
 
-    public SportMatch(int id, String title,
-                      String location, double price,
-                      int capacity, String team) {
+    public SportMatch(String id, String title,
+            String location, double price,
+            int capacity, String team) {
 
         super(id, title, location, price, capacity);
 

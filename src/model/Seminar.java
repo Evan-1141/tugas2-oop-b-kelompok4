@@ -1,13 +1,13 @@
 package model;
 
 public class Seminar extends Event
-                      implements Refundable {
+        implements Refundable {
 
     private String speaker;
 
-    public Seminar(int id, String title,
-                   String location, double price,
-                   int capacity, String speaker) {
+    public Seminar(String id, String title,
+            String location, double price,
+            int capacity, String speaker) {
 
         super(id, title, location, price, capacity);
 

@@ -1,13 +1,13 @@
 package model;
 
 public class Concert extends Event
-                      implements Refundable {
+        implements Refundable {
 
     private String artist;
 
-    public Concert(int id, String title,
-                   String location, double price,
-                   int capacity, String artist) {
+    public Concert(String id, String title,
+            String location, double price,
+            int capacity, String artist) {
 
         super(id, title, location, price, capacity);
 
