@@ -2,25 +2,23 @@ package model;
 
 public abstract class Event {
 
-    protected int id;
+    protected String id;
     protected String title;
     protected String location;
     protected double price;
     protected int capacity;
 
-    public Event(int id, String title, String location,
-                 double price, int capacity) {
+    public Event(String id, String title, String location,
+            double price, int capacity) {
 
         if (price < 0) {
             throw new IllegalArgumentException(
-                "Harga tidak boleh negatif"
-            );
+                    "Harga tidak boleh negatif");
         }
 
         if (capacity < 0) {
             throw new IllegalArgumentException(
-                "Kapasitas tidak boleh negatif"
-            );
+                    "Kapasitas tidak boleh negatif");
         }
 
         this.id = id;
@@ -43,7 +41,7 @@ public abstract class Event {
         System.out.println("Capacity: " + capacity);
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
