@@ -23,7 +23,7 @@ public class Concert extends Event
     public double calculateTicketPrice(String category) {
 
         if (category.equalsIgnoreCase("VIP")) {
-            return getPrice() * 3;
+            return getPrice() * 3.0;
         }
 
         if (category.equalsIgnoreCase("Regular")) {
@@ -41,11 +41,11 @@ public class Concert extends Event
     public double calculateRefund(int daysBeforeEvent) {
 
         if (daysBeforeEvent > 14) {
-            return getPrice() * 0.9;
-        } else if (daysBeforeEvent >= 7 && daysBeforeEvent <= 14) {
+            return getPrice() * 1.0;
+        }
+
+        if (daysBeforeEvent >= 7 && daysBeforeEvent <= 14) {
             return getPrice() * 0.5;
-        } else if (daysBeforeEvent >= 1 && daysBeforeEvent < 7) {
-            return getPrice() * 0;
         }
 
         return 0;

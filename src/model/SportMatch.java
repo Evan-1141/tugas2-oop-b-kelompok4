@@ -21,8 +21,16 @@ public class SportMatch extends Event {
     @Override
     public double calculateTicketPrice(String category) {
 
+        if (category.equalsIgnoreCase("Tribune")) {
+            return getPrice() * 1.0;
+        }
+
         if (category.equalsIgnoreCase("VIP")) {
-            return getPrice() * 1.5;
+            return getPrice() * 2.0;
+        }
+
+        if (category.equalsIgnoreCase("VVIP")) {
+            return getPrice() * 5.0;
         }
 
         return getPrice();

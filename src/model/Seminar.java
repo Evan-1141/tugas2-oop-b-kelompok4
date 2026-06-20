@@ -28,8 +28,8 @@ public class Seminar extends Event
     @Override
     public double calculateRefund(int daysBeforeEvent) {
 
-        if (daysBeforeEvent >= 3) {
-            return getPrice() * 0.5;
+        if (daysBeforeEvent > 1) {
+            return getPrice() * 1.0;
         }
 
         return 0;
