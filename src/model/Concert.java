@@ -5,47 +5,49 @@ public class Concert extends Event
 
     private String artist;
 
-    public Concert(String id, String title,
-            String location, double price,
-            int capacity, String artist) {
+    public Concert(String id, String name, String venueId,
+                   String organizerId, String date,
+                   double basePrice, String createdAt,
+                   String artist) {
 
-        super(id, title, location, price, capacity);
+        super(id, name, venueId, organizerId, date,
+              basePrice, createdAt);
 
         this.artist = artist;
     }
 
     @Override
     public String getEventType() {
-        return "Concert";
+        return "concert";
     }
 
     @Override
     public double calculateTicketPrice(String category) {
 
         if (category.equalsIgnoreCase("VIP")) {
-            return getPrice() * 3.0;
+            return getBasePrice() * 3.0;
         }
 
         if (category.equalsIgnoreCase("Regular")) {
-            return getPrice() * 1.0;
+            return getBasePrice() * 1.0;
         }
 
         if (category.equalsIgnoreCase("Festival")) {
-            return getPrice() * 0.7;
+            return getBasePrice() * 0.7;
         }
 
-        return getPrice();
+        return getBasePrice();
     }
 
     @Override
     public double calculateRefund(int daysBeforeEvent) {
 
         if (daysBeforeEvent > 14) {
-            return getPrice() * 1.0;
+            return getBasePrice() * 1.0;
         }
 
         if (daysBeforeEvent >= 7 && daysBeforeEvent <= 14) {
-            return getPrice() * 0.5;
+            return getBasePrice() * 0.5;
         }
 
         return 0;
@@ -58,6 +60,10 @@ public class Concert extends Event
 
     public String getArtist() {
         return artist;
+    }
+
+    public void setArtist(String artist) {
+        this.artist = artist;
     }
 
     @Override

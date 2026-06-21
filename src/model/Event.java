@@ -2,30 +2,30 @@ package model;
 
 public abstract class Event {
 
-    protected String id;
-    protected String title;
-    protected String location;
-    protected double price;
-    protected int capacity;
+    private String id;
+    private String name;
+    private String venueId;
+    private String organizerId;
+    private String date;
+    private double basePrice;
+    private String createdAt;
 
-    public Event(String id, String title, String location,
-            double price, int capacity) {
+    public Event(String id, String name, String venueId,
+                 String organizerId, String date,
+                 double basePrice, String createdAt) {
 
-        if (price < 0) {
+        if (basePrice < 0) {
             throw new IllegalArgumentException(
                     "Harga tidak boleh negatif");
         }
 
-        if (capacity < 0) {
-            throw new IllegalArgumentException(
-                    "Kapasitas tidak boleh negatif");
-        }
-
         this.id = id;
-        this.title = title;
-        this.location = location;
-        this.price = price;
-        this.capacity = capacity;
+        this.name = name;
+        this.venueId = venueId;
+        this.organizerId = organizerId;
+        this.date = date;
+        this.basePrice = basePrice;
+        this.createdAt = createdAt;
     }
 
     public abstract String getEventType();
@@ -35,34 +35,76 @@ public abstract class Event {
     public void displayInfo() {
 
         System.out.println("ID: " + id);
-        System.out.println("Title: " + title);
-        System.out.println("Location: " + location);
-        System.out.println("Price: " + price);
-        System.out.println("Capacity: " + capacity);
+        System.out.println("Name: " + name);
+        System.out.println("Venue ID: " + venueId);
+        System.out.println("Organizer ID: " + organizerId);
+        System.out.println("Date: " + date);
+        System.out.println("Base Price: " + basePrice);
+        System.out.println("Created At: " + createdAt);
     }
+
+    // Getter
 
     public String getId() {
         return id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public String getLocation() {
-        return location;
+    public String getVenueId() {
+        return venueId;
     }
 
-    public double getPrice() {
-        return price;
+    public String getOrganizerId() {
+        return organizerId;
     }
 
-    public int getCapacity() {
-        return capacity;
+    public String getDate() {
+        return date;
+    }
+
+    public double getBasePrice() {
+        return basePrice;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    // Setter
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setVenueId(String venueId) {
+        this.venueId = venueId;
+    }
+
+    public void setOrganizerId(String organizerId) {
+        this.organizerId = organizerId;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public void setBasePrice(double basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 
     @Override
     public String toString() {
-        return title + " - " + location;
+        return name + " [" + getEventType() + "]";
     }
 }

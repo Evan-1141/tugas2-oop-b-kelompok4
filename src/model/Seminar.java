@@ -5,31 +5,33 @@ public class Seminar extends Event
 
     private String speaker;
 
-    public Seminar(String id, String title,
-            String location, double price,
-            int capacity, String speaker) {
+    public Seminar(String id, String name, String venueId,
+                   String organizerId, String date,
+                   double basePrice, String createdAt,
+                   String speaker) {
 
-        super(id, title, location, price, capacity);
+        super(id, name, venueId, organizerId, date,
+              basePrice, createdAt);
 
         this.speaker = speaker;
     }
 
     @Override
     public String getEventType() {
-        return "Seminar";
+        return "seminar";
     }
 
     @Override
     public double calculateTicketPrice(String category) {
 
-        return getPrice();
+        return getBasePrice();
     }
 
     @Override
     public double calculateRefund(int daysBeforeEvent) {
 
         if (daysBeforeEvent > 1) {
-            return getPrice() * 1.0;
+            return getBasePrice() * 1.0;
         }
 
         return 0;
@@ -42,5 +44,15 @@ public class Seminar extends Event
 
     public String getSpeaker() {
         return speaker;
+    }
+
+    public void setSpeaker(String speaker) {
+        this.speaker = speaker;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()
+                + " | Speaker: " + speaker;
     }
 }
