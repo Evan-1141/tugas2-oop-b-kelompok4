@@ -16,4 +16,13 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public boolean updateUser(User user) {
+    return userRepository.update(user);
+    }
+
+    public User getUserById(String id) {
+    return userRepository.findById(id);
+    }
+
 }
+
