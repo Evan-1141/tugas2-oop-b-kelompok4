@@ -1,12 +1,30 @@
 package service;
 
+import repository.VenueRepository;
+import model.Venue;
+import java.util.List;
+
 public class VenueService {
-    
-    public Object getAllTickets(){}
 
-    public Object getTicketById(String id){}
+    private VenueRepository venueRepository;
 
-    public Object buyTicket(){}
+    public VenueService() {
+        this.venueRepository = new VenueRepository();
+    }
 
-    public Object refundTicket(String id){}
+    public List<Venue> getAllVenues() {
+        return venueRepository.findAll();
+    }
+
+    public Venue getVenueById(String id) {
+        return venueRepository.findById(id);
+    }
+
+    public boolean createVenue(Venue venue) {
+        return venueRepository.save(venue);
+    }
+
+    public boolean updateVenue(Venue venue) {
+        return venueRepository.update(venue);
+    }
 }
