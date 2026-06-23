@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import handler.UserHandler;
+import handler.EventHandler;
+import handler.VenueHandler;
+import handler.TicketHandler;
 
 public class App {
 
@@ -70,8 +74,8 @@ public class App {
 
         // --- Contoh 4: POST dengan JSON body ---
         // Coba: curl -X POST http://localhost:8080/api/contoh \
-        //        -H "Content-Type: application/json" \
-        //        -d '{"nama": "Item Baru", "harga": 50000}'
+        // -H "Content-Type: application/json" \
+        // -d '{"nama": "Item Baru", "harga": 50000}'
         server.post("/api/contoh", (req, res) -> {
             Map<String, Object> body = req.getJSON();
             if (body == null) {
@@ -95,8 +99,8 @@ public class App {
 
         // --- Contoh 5: PUT dengan path parameter + JSON body ---
         // Coba: curl -X PUT http://localhost:8080/api/contoh/CTH-001 \
-        //        -H "Content-Type: application/json" \
-        //        -d '{"nama": "Nama Diupdate"}'
+        // -H "Content-Type: application/json" \
+        // -d '{"nama": "Nama Diupdate"}'
         server.put("/api/contoh/{id}", (req, res) -> {
             String id = req.getPathParam("id");
             Map<String, Object> body = req.getJSON();
@@ -117,15 +121,47 @@ public class App {
         //
         // PENTING: Daftarkan route yang lebih spesifik dulu!
         // Contoh yang BENAR:
-        //   server.get("/api/events/ringkasan-harga", ...);  // dulu
-        //   server.get("/api/events/{id}", ...);              // baru ini
+        // server.get("/api/events/ringkasan-harga", ...); // dulu
+        // server.get("/api/events/{id}", ...); // baru ini
         //
         // Contoh yang SALAH (ringkasan-harga tidak akan pernah tercapai):
-        //   server.get("/api/events/{id}", ...);
-        //   server.get("/api/events/ringkasan-harga", ...);
+        // server.get("/api/events/{id}", ...);
+        // server.get("/api/events/ringkasan-harga", ...);
         // =============================================
 
+        // Daftarkan route API kalian di sini
 
+        server.get(
+                "/api/users",
+                UserHandler::getAllUsers);
+
+        server.get(
+                "/api/users/{id}",
+                UserHandler::getUserById);
+
+        server.get(
+                "/api/events",
+                EventHandler::getAllEvents);
+
+        server.get(
+                "/api/events/{id}",
+                EventHandler::getEventById);
+
+        server.get(
+                "/api/venues",
+                VenueHandler::getAllVenues);
+
+        server.get(
+                "/api/venues/{id}",
+                VenueHandler::getVenueById);
+
+        server.get(
+                "/api/tickets",
+                TicketHandler::getAllTickets);
+
+        server.get(
+                "/api/tickets/{id}",
+                TicketHandler::getTicketById);
 
         // Jalankan server
         System.out.printf("Server berjalan di http://localhost:%d%n", port);
@@ -133,8 +169,11 @@ public class App {
         System.out.println("Contoh pengujian dengan curl:");
         System.out.printf("  curl http://localhost:%d/api/contoh%n", port);
         System.out.printf("  curl http://localhost:%d/api/contoh/CTH-001%n", port);
-        System.out.printf("  curl -X POST http://localhost:%d/api/contoh -H \"Content-Type: application/json\" -d '{\"nama\": \"Test\"}'%n%n", port);
+        System.out.printf(
+                "  curl -X POST http://localhost:%d/api/contoh -H \"Content-Type: application/json\" -d '{\"nama\": \"Test\"}'%n%n",
+                port);
         server.start();
+
     }
 }
 
@@ -142,27 +181,27 @@ public class App {
 // CARA MENJALANKAN
 //
 // 1. Pastikan library JAR ada di folder lib/:
-//    lib/
-//    ├── jackson-annotations-2.13.3.jar
-//    ├── jackson-core-2.13.3.jar
-//    ├── jackson-databind-2.13.3.jar
-//    └── sqlite-jdbc-3.49.1.0.jar
+// lib/
+// ├── jackson-annotations-2.13.3.jar
+// ├── jackson-core-2.13.3.jar
+// ├── jackson-databind-2.13.3.jar
+// └── sqlite-jdbc-3.49.1.0.jar
 //
 // 2. Kompilasi (jalankan dari folder src/):
 //
-//    Linux/Mac:
-//      javac -cp ".:../lib/*" App.java server/*.java database/*.java
+// Linux/Mac:
+// javac -cp ".:../lib/*" App.java server/*.java database/*.java
 //
-//    Windows:
-//      javac -cp ".;../lib/*" App.java server/*.java database/*.java
+// Windows:
+// javac -cp ".;../lib/*" App.java server/*.java database/*.java
 //
 // 3. Jalankan (dari folder src/):
 //
-//    Linux/Mac:
-//      java -cp ".:../lib/*" App
+// Linux/Mac:
+// java -cp ".:../lib/*" App
 //
-//    Windows:
-//      java -cp ".;../lib/*" App
+// Windows:
+// java -cp ".;../lib/*" App
 //
 // 4. Test dengan curl atau Postman di http://localhost:8080
 // =============================================
