@@ -3,6 +3,7 @@ package service;
 import repository.EventRepository;
 import model.Event;
 import java.util.List;
+import exception.EventNotFoundException;
 
 public class EventService {
 
@@ -17,7 +18,15 @@ public class EventService {
     }
 
     public Event getEventById(String id) {
-        return eventRepository.findById(id);
+
+        Event event = eventRepository.findById(id);
+
+        if (event == null) {
+            throw new EventNotFoundException(
+                    "Event dengan ID " + id + " tidak ditemukan.");
+        }
+
+        return event;
     }
 
     public boolean createEvent(Event event) {
@@ -25,6 +34,12 @@ public class EventService {
     }
 
     public boolean updateEvent(Event event) {
+
+        if (eventRepository.findById(event.getId()) == null) {
+            throw new EventNotFoundException(
+                    "Event dengan ID " + event.getId() + " tidak ditemukan.");
+        }
+
         return eventRepository.update(event);
     }
 }
