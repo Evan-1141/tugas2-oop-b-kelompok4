@@ -43,8 +43,6 @@ public abstract class Event {
         System.out.println("Created At: " + createdAt);
     }
 
-    // Getter
-
     public String getId() {
         return id;
     }
@@ -72,8 +70,6 @@ public abstract class Event {
     public String getCreatedAt() {
         return createdAt;
     }
-
-    // Setter
 
     public void setId(String id) {
         this.id = id;

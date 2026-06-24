@@ -20,8 +20,6 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    // Getter
-
     public String getId() {
         return id;
     }
@@ -45,8 +43,6 @@ public class User {
     public String getCreatedAt() {
         return createdAt;
     }
-
-    // Setter
 
     public void setId(String id) {
         this.id = id;

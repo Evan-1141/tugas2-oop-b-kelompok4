@@ -31,8 +31,6 @@ public class Ticket {
         this.refundAmount = refundAmount;
     }
 
-    // Getter
-
     public String getId() {
         return id;
     }
@@ -72,8 +70,6 @@ public class Ticket {
     public double getRefundAmount() {
         return refundAmount;
     }
-
-    // Setter
 
     public void setId(String id) {
         this.id = id;

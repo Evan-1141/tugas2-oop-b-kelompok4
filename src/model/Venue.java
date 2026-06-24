@@ -23,8 +23,6 @@ public class Venue {
         this.createdAt = createdAt;
     }
 
-    // Getter
-
     public String getId() {
         return id;
     }
@@ -44,8 +42,6 @@ public class Venue {
     public String getCreatedAt() {
         return createdAt;
     }
-
-    // Setter
 
     public void setId(String id) {
         this.id = id;
