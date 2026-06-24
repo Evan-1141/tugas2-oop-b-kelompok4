@@ -28,6 +28,16 @@ public class TicketService {
     }
 
     public boolean createTicket(Ticket ticket) {
+        Event event = eventRepository.findById(
+                ticket.getEventId());
+
+        if (event == null) {
+            throw new EventNotFoundException(
+                    "Event dengan ID "
+                            + ticket.getEventId()
+                            + " tidak ditemukan.");
+        }
+
         return ticketRepository.save(ticket);
     }
 
@@ -44,10 +54,9 @@ public class TicketService {
         }
 
         if (!(event instanceof Refundable)) {
-
             throw new RefundNotAllowedException(
-                    event.getClass().getSimpleName()
-                            + "event tidak menerima refund");
+                    "Event " + event.getName()
+                            + " tidak menerima refund");
         }
 
         return ticketRepository.update(ticket);
