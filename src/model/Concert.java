@@ -6,12 +6,12 @@ public class Concert extends Event
     private String artist;
 
     public Concert(String id, String name, String venueId,
-                   String organizerId, String date,
-                   double basePrice, String createdAt,
-                   String artist) {
+            String organizerId, String date,
+            double basePrice, String createdAt, String updatedAt,
+            String artist) {
 
         super(id, name, venueId, organizerId, date,
-              basePrice, createdAt);
+                basePrice, createdAt, updatedAt);
 
         this.artist = artist;
     }

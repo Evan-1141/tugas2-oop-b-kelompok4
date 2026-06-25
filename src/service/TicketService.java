@@ -30,8 +30,36 @@ public class TicketService {
         return ticketRepository.findAll();
     }
 
+    public List<Ticket> getAllTickets(
+            String eventId,
+            String userId,
+            String status) {
+
+        if (eventId != null && !eventId.isBlank()) {
+            return ticketRepository.findByEventId(eventId);
+        }
+
+        if (userId != null && !userId.isBlank()) {
+            return ticketRepository.findByUserId(userId);
+        }
+
+        if (status != null && !status.isBlank()) {
+            return ticketRepository.findByStatus(status);
+        }
+
+        return ticketRepository.findAll();
+    }
+
     public Ticket getTicketById(String id) {
         return ticketRepository.findById(id);
+    }
+
+    public Event getEvent(String eventId) {
+        return eventRepository.findById(eventId);
+    }
+
+    public User getUser(String userId) {
+        return userRepository.findById(userId);
     }
 
     public boolean createTicket(Ticket ticket) {

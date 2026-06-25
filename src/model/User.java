@@ -8,9 +8,10 @@ public class User {
     private String phone;
     private String role;
     private String createdAt;
+    private String updatedAt;
 
     public User(String id, String name, String email,
-                String phone, String role, String createdAt) {
+            String phone, String role, String createdAt, String updatedAt) {
 
         this.id = id;
         this.name = name;
@@ -18,6 +19,7 @@ public class User {
         this.phone = phone;
         this.role = role;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getId() {
@@ -44,6 +46,10 @@ public class User {
         return createdAt;
     }
 
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -66,6 +72,10 @@ public class User {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

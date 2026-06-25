@@ -4,6 +4,7 @@ import server.Request;
 import server.Response;
 import service.VenueService;
 import model.Venue;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,13 +30,22 @@ public class VenueHandler {
                 Venue venue = venueService.getVenueById(id);
 
                 if (venue == null) {
-                        res.sendError(
-                                        404,
-                                        "Venue tidak ditemukan");
+                        res.sendError(404, "Venue tidak ditemukan");
                         return;
                 }
 
-                res.sendSuccess(venue);
+                Map<String, Object> data = new LinkedHashMap<>();
+
+                data.put("id", venue.getId());
+                data.put("name", venue.getName());
+                data.put("address", venue.getAddress());
+                data.put("maxCapacity", venue.getMaxCapacity());
+                data.put("createdAt", venue.getCreatedAt());
+                data.put("updatedAt", venue.getUpdatedAt());
+
+                data.put("events", venueService.getVenueEvents(venue.getId()));
+
+                res.sendSuccess(data);
         }
 
         public static void createVenue(
@@ -70,16 +80,18 @@ public class VenueHandler {
                                         "yyyy-MM-dd HH:mm:ss");
 
                         String createdAt = LocalDateTime.now().format(formatter);
+                        String updatedAt = null;
 
                         Venue venue = new Venue(
                                         venueService.generateId(),
                                         name,
                                         address,
                                         maxCapacity,
-                                        createdAt);
+                                        createdAt,
+                                        updatedAt);
 
                         if (venueService.createVenue(venue)) {
-                                res.sendSuccess(venue);
+                                res.sendCreated(venue);
                         } else {
                                 res.sendError(
                                                 500,
@@ -125,12 +137,16 @@ public class VenueHandler {
 
                         Integer maxCapacity = (Integer) body.get("maxCapacity");
 
+                        String updatedAt = LocalDateTime.now().format(
+                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
                         Venue venue = new Venue(
                                         id,
                                         name != null ? name : oldVenue.getName(),
                                         address != null ? address : oldVenue.getAddress(),
                                         maxCapacity != null ? maxCapacity : oldVenue.getMaxCapacity(),
-                                        oldVenue.getCreatedAt());
+                                        oldVenue.getCreatedAt(),
+                                        updatedAt);
 
                         if (venueService.updateVenue(venue)) {
                                 res.sendSuccess(venue);

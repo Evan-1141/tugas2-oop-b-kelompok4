@@ -4,13 +4,15 @@ import server.Request;
 import server.Response;
 import service.EventService;
 import model.Event;
+import model.Refundable;
+import model.Concert;
+import model.Seminar;
+import model.SportMatch;
 import exception.EventNotFoundException;
 import java.util.Map;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import model.Concert;
-import model.Seminar;
-import model.SportMatch;
+import java.util.LinkedHashMap;
 
 public class EventHandler {
 
@@ -33,7 +35,60 @@ public class EventHandler {
 
                         Event event = eventService.getEventById(id);
 
-                        res.sendSuccess(event);
+                        Map<String, Object> data = new LinkedHashMap<>();
+
+                        data.put("id", event.getId());
+                        data.put("type", event.getEventType());
+                        data.put("name", event.getName());
+
+                        data.put("venue",
+                                        eventService.getVenueInfo(event.getVenueId()));
+
+                        data.put("organizer",
+                                        eventService.getOrganizerInfo(event.getOrganizerId()));
+
+                        data.put("date", event.getDate());
+                        data.put("basePrice", event.getBasePrice());
+                        Map<String, Object> priceList = new LinkedHashMap<>();
+
+                        if (event instanceof Concert) {
+
+                                priceList.put("vip", event.calculateTicketPrice("VIP"));
+                                priceList.put("regular", event.calculateTicketPrice("Regular"));
+                                priceList.put("festival", event.calculateTicketPrice("Festival"));
+
+                        } else if (event instanceof Seminar) {
+
+                                priceList.put("regular", event.calculateTicketPrice("Regular"));
+
+                        } else if (event instanceof SportMatch) {
+
+                                priceList.put("tribune", event.calculateTicketPrice("Tribune"));
+                                priceList.put("vip", event.calculateTicketPrice("VIP"));
+                                priceList.put("vvip", event.calculateTicketPrice("VVIP"));
+                        }
+
+                        data.put("priceList", priceList);
+
+                        data.put("createdAt", event.getCreatedAt());
+                        data.put("updatedAt", event.getUpdatedAt());
+
+                        if (event instanceof Refundable) {
+
+                                Refundable refundable = (Refundable) event;
+
+                                data.put("refundable", refundable.isRefundable());
+
+                                if (event instanceof Concert) {
+                                        data.put("refundPolicy",
+                                                        "100% if >14 days, 50% if 7-14 days, 0% if <7 days");
+                                } else if (event instanceof Seminar) {
+                                        data.put("refundPolicy",
+                                                        "100% if >1 day, 0% on event day");
+                                }
+                        }
+
+                        res.sendSuccess(data);
 
                 } catch (EventNotFoundException e) {
 
@@ -80,6 +135,8 @@ public class EventHandler {
                         String createdAt = LocalDateTime.now().format(
                                         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
+                        String updatedAt = null;
+
                         Event event;
 
                         switch (type.toLowerCase()) {
@@ -93,6 +150,7 @@ public class EventHandler {
                                                         date,
                                                         basePrice,
                                                         createdAt,
+                                                        updatedAt,
                                                         (String) body.get("artist"));
                                         break;
 
@@ -105,6 +163,7 @@ public class EventHandler {
                                                         date,
                                                         basePrice,
                                                         createdAt,
+                                                        updatedAt,
                                                         (String) body.get("speaker"));
                                         break;
 
@@ -117,6 +176,7 @@ public class EventHandler {
                                                         date,
                                                         basePrice,
                                                         createdAt,
+                                                        updatedAt,
                                                         (String) body.get("team"));
                                         break;
 
@@ -160,6 +220,9 @@ public class EventHandler {
 
                         Number basePriceObj = (Number) body.get("basePrice");
 
+                        String updatedAt = LocalDateTime.now().format(
+                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
                         Event event;
 
                         if (oldEvent instanceof Concert) {
@@ -173,6 +236,7 @@ public class EventHandler {
                                                 basePriceObj != null ? basePriceObj.doubleValue()
                                                                 : oldEvent.getBasePrice(),
                                                 oldEvent.getCreatedAt(),
+                                                updatedAt,
                                                 (String) body.getOrDefault(
                                                                 "artist",
                                                                 ((Concert) oldEvent).getArtist()));
@@ -188,6 +252,7 @@ public class EventHandler {
                                                 basePriceObj != null ? basePriceObj.doubleValue()
                                                                 : oldEvent.getBasePrice(),
                                                 oldEvent.getCreatedAt(),
+                                                updatedAt,
                                                 (String) body.getOrDefault(
                                                                 "speaker",
                                                                 ((Seminar) oldEvent).getSpeaker()));
@@ -203,6 +268,7 @@ public class EventHandler {
                                                 basePriceObj != null ? basePriceObj.doubleValue()
                                                                 : oldEvent.getBasePrice(),
                                                 oldEvent.getCreatedAt(),
+                                                updatedAt,
                                                 (String) body.getOrDefault(
                                                                 "team",
                                                                 ((SportMatch) oldEvent).getTeam()));
@@ -216,6 +282,43 @@ public class EventHandler {
 
                 } catch (Exception e) {
                         res.sendError(400, e.getMessage());
+                }
+        }
+
+        public static void getPriceSummary(
+                        Request req,
+                        Response res) {
+
+                res.sendSuccess(
+                                eventService.getPriceSummary());
+        }
+
+        public static void getSalesReport(
+                        Request req,
+                        Response res) {
+
+                String eventId = req.getQueryParam("eventId");
+
+                if (eventId == null || eventId.isBlank()) {
+
+                        res.sendError(
+                                        400,
+                                        "Parameter eventId wajib diisi.");
+
+                        return;
+                }
+
+                try {
+
+                        res.sendSuccess(
+                                        eventService.getSalesReport(eventId));
+
+                } catch (Exception e) {
+
+                        res.sendError(
+                                        400,
+                                        e.getMessage());
+
                 }
         }
 }

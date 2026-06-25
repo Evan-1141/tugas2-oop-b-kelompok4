@@ -19,11 +19,12 @@ public class EventRepository {
         String sql = "SELECT * FROM events";
 
         try (Connection conn = DatabaseManager.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 Event e = mapRow(rs);
-                if (e != null) events.add(e);
+                if (e != null)
+                    events.add(e);
             }
         } catch (SQLException e) {
             System.err.println("Error findAll events: " + e.getMessage());
@@ -34,9 +35,9 @@ public class EventRepository {
     public Event findById(String id) {
         String sql = "SELECT * FROM events WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-             ps.setString(1, id);
-             try (ResultSet rs = ps.executeQuery()) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);
                 }
@@ -51,12 +52,13 @@ public class EventRepository {
         List<Event> events = new ArrayList<>();
         String sql = "SELECT * FROM events WHERE type = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, type);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Event e = mapRow(rs);
-                    if (e != null) events.add(e);
+                    if (e != null)
+                        events.add(e);
                 }
             }
         } catch (SQLException e) {
@@ -69,12 +71,13 @@ public class EventRepository {
         List<Event> events = new ArrayList<>();
         String sql = "SELECT * FROM events WHERE date >= ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, dateFrom);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Event e = mapRow(rs);
-                    if (e != null) events.add(e);
+                    if (e != null)
+                        events.add(e);
                 }
             }
         } catch (SQLException e) {
@@ -85,10 +88,10 @@ public class EventRepository {
 
     public boolean save(Event event) {
         String sql = "INSERT INTO events (id, type, name, venue_id, organizer_id, "
-                   + "date, base_price, artist, speaker, team, created_at) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "date, base_price, artist, speaker, team, created_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             setEventParams(ps, event);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -99,8 +102,8 @@ public class EventRepository {
 
     public boolean save(Event event, Connection conn) throws SQLException {
         String sql = "INSERT INTO events (id, type, name, venue_id, organizer_id, "
-                   + "date, base_price, artist, speaker, team, created_at) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "date, base_price, artist, speaker, team, created_at, updated_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             setEventParams(ps, event);
             return ps.executeUpdate() > 0;
@@ -108,11 +111,11 @@ public class EventRepository {
     }
 
     public boolean update(Event event) {
-         String sql = "UPDATE events SET name = ?, venue_id = ?, organizer_id = ?, "
-                   + "date = ?, base_price = ?, artist = ?, speaker = ?, team = ? "
-                   + "WHERE id = ?";
+        String sql = "UPDATE events SET name = ?, venue_id = ?, organizer_id = ?, "
+                + "date = ?, base_price = ?, artist = ?, speaker = ?, team = ?, updated_at = ? "
+                + "WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, event.getName());
             ps.setString(2, event.getVenueId());
             ps.setString(3, event.getOrganizerId());
@@ -129,7 +132,8 @@ public class EventRepository {
             } else if (event instanceof SportMatch) {
                 ps.setString(8, ((SportMatch) event).getTeam());
             }
-            ps.setString(9, event.getId());
+            ps.setString(9, event.getUpdatedAt());
+            ps.setString(10, event.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error update event: " + e.getMessage());
@@ -140,7 +144,7 @@ public class EventRepository {
     public boolean existsByVenueAndDate(String venueId, String date) {
         String sql = "SELECT COUNT(*) FROM events WHERE venue_id = ? AND date = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, venueId);
             ps.setString(2, date);
             try (ResultSet rs = ps.executeQuery()) {
@@ -156,9 +160,9 @@ public class EventRepository {
 
     public void saveCapacities(String eventId, List<Map<String, Object>> capacities) {
         String sql = "INSERT INTO capacities (event_id, category, total, filled) "
-                   + "VALUES (?, ?, ?, 0)";
+                + "VALUES (?, ?, ?, 0)";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             for (Map<String, Object> cap : capacities) {
                 ps.setString(1, eventId);
                 ps.setString(2, (String) cap.get("category"));
@@ -172,9 +176,9 @@ public class EventRepository {
     }
 
     public void saveCapacities(String eventId, List<Map<String, Object>> capacities,
-                               Connection conn) throws SQLException {
+            Connection conn) throws SQLException {
         String sql = "INSERT INTO capacities (event_id, category, total, filled) "
-                   + "VALUES (?, ?, ?, 0)";
+                + "VALUES (?, ?, ?, 0)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             for (Map<String, Object> cap : capacities) {
                 ps.setString(1, eventId);
@@ -190,7 +194,7 @@ public class EventRepository {
         List<Map<String, Object>> capacities = new ArrayList<>();
         String sql = "SELECT * FROM capacities WHERE event_id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, eventId);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -211,9 +215,9 @@ public class EventRepository {
 
     public int getRemainingCapacity(String eventId, String category) {
         String sql = "SELECT (total - filled) AS remaining FROM capacities "
-                   + "WHERE event_id = ? AND category = ?";
+                + "WHERE event_id = ? AND category = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, eventId);
             ps.setString(2, category);
             try (ResultSet rs = ps.executeQuery()) {
@@ -229,9 +233,9 @@ public class EventRepository {
 
     public boolean incrementFilled(String eventId, String category, int quantity) {
         String sql = "UPDATE capacities SET filled = filled + ? "
-                   + "WHERE event_id = ? AND category = ?";
+                + "WHERE event_id = ? AND category = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantity);
             ps.setString(2, eventId);
             ps.setString(3, category);
@@ -243,9 +247,9 @@ public class EventRepository {
     }
 
     public boolean incrementFilled(String eventId, String category, int quantity,
-                                   Connection conn) throws SQLException {
+            Connection conn) throws SQLException {
         String sql = "UPDATE capacities SET filled = filled + ? "
-                   + "WHERE event_id = ? AND category = ?";
+                + "WHERE event_id = ? AND category = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantity);
             ps.setString(2, eventId);
@@ -256,9 +260,9 @@ public class EventRepository {
 
     public boolean decrementFilled(String eventId, String category, int quantity) {
         String sql = "UPDATE capacities SET filled = filled - ? "
-                   + "WHERE event_id = ? AND category = ?";
+                + "WHERE event_id = ? AND category = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantity);
             ps.setString(2, eventId);
             ps.setString(3, category);
@@ -270,9 +274,9 @@ public class EventRepository {
     }
 
     public boolean decrementFilled(String eventId, String category, int quantity,
-                                   Connection conn) throws SQLException {
+            Connection conn) throws SQLException {
         String sql = "UPDATE capacities SET filled = filled - ? "
-                   + "WHERE event_id = ? AND category = ?";
+                + "WHERE event_id = ? AND category = ?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantity);
             ps.setString(2, eventId);
@@ -284,8 +288,8 @@ public class EventRepository {
     public String generateId() {
         String sql = "SELECT id FROM events ORDER BY id DESC LIMIT 1";
         try (Connection conn = DatabaseManager.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 String lastId = rs.getString("id");
                 int num = Integer.parseInt(lastId.split("-")[1]);
@@ -316,31 +320,33 @@ public class EventRepository {
             ps.setString(10, ((SportMatch) event).getTeam());
         }
         ps.setString(11, event.getCreatedAt());
+        ps.setString(12, event.getUpdatedAt());
     }
 
     private Event mapRow(ResultSet rs) throws SQLException {
-        String id          = rs.getString("id");
-        String type        = rs.getString("type");
-        String name        = rs.getString("name");
-        String venueId     = rs.getString("venue_id");
+        String id = rs.getString("id");
+        String type = rs.getString("type");
+        String name = rs.getString("name");
+        String venueId = rs.getString("venue_id");
         String organizerId = rs.getString("organizer_id");
-        String date        = rs.getString("date");
-        double basePrice   = rs.getDouble("base_price");
-        String createdAt   = rs.getString("created_at");
+        String date = rs.getString("date");
+        double basePrice = rs.getDouble("base_price");
+        String createdAt = rs.getString("created_at");
+        String updatedAt = rs.getString("updated_at");
 
         switch (type) {
             case "concert":
                 String artist = rs.getString("artist");
                 return new Concert(id, name, venueId, organizerId,
-                                   date, basePrice, createdAt, artist);
+                        date, basePrice, createdAt, artist, updatedAt);
             case "seminar":
                 String speaker = rs.getString("speaker");
                 return new Seminar(id, name, venueId, organizerId,
-                                   date, basePrice, createdAt, speaker);
+                        date, basePrice, createdAt, speaker, updatedAt);
             case "sport_match":
                 String team = rs.getString("team");
                 return new SportMatch(id, name, venueId, organizerId,
-                                      date, basePrice, createdAt, team);
+                        date, basePrice, createdAt, team, updatedAt);
             default:
                 System.err.println("Tipe event tidak dikenal: " + type);
                 return null;

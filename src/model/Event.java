@@ -9,10 +9,16 @@ public abstract class Event {
     private String date;
     private double basePrice;
     private String createdAt;
+    private String updatedAt;
 
-    public Event(String id, String name, String venueId,
-                 String organizerId, String date,
-                 double basePrice, String createdAt) {
+    public Event(String id,
+            String name,
+            String venueId,
+            String organizerId,
+            String date,
+            double basePrice,
+            String createdAt,
+            String updatedAt) {
 
         if (basePrice < 0) {
             throw new IllegalArgumentException(
@@ -26,6 +32,7 @@ public abstract class Event {
         this.date = date;
         this.basePrice = basePrice;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public abstract String getEventType();
@@ -71,6 +78,10 @@ public abstract class Event {
         return createdAt;
     }
 
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -97,6 +108,10 @@ public abstract class Event {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override

@@ -6,12 +6,12 @@ public class Seminar extends Event
     private String speaker;
 
     public Seminar(String id, String name, String venueId,
-                   String organizerId, String date,
-                   double basePrice, String createdAt,
-                   String speaker) {
+            String organizerId, String date,
+            double basePrice, String createdAt, String updatedAt,
+            String speaker) {
 
         super(id, name, venueId, organizerId, date,
-              basePrice, createdAt);
+                basePrice, createdAt, updatedAt);
 
         this.speaker = speaker;
     }

@@ -68,7 +68,8 @@ public class DatabaseManager {
                                                         + "  email TEXT NOT NULL UNIQUE,"
                                                         + "  phone TEXT,"
                                                         + "  role TEXT DEFAULT 'buyer', "
-                                                        + "  created_at TEXT DEFAULT (datetime('now'))"
+                                                        + "  created_at TEXT DEFAULT (datetime('now')),"
+                                                        + "  updated_at TEXT "
                                                         + ")");
 
                         stmt.execute(
@@ -77,7 +78,8 @@ public class DatabaseManager {
                                                         + "  name TEXT NOT NULL,"
                                                         + "  address TEXT NOT NULL,"
                                                         + "  max_capacity INTEGER NOT NULL,"
-                                                        + "  created_at TEXT DEFAULT (datetime('now'))"
+                                                        + "  created_at TEXT DEFAULT (datetime('now')),"
+                                                        + "  updated_at TEXT "
                                                         + ")");
 
                         stmt.execute(
@@ -93,6 +95,7 @@ public class DatabaseManager {
                                                         + "  speaker TEXT,"
                                                         + "  team TEXT,"
                                                         + "  created_at TEXT DEFAULT (datetime('now')),"
+                                                        + "  updated_at TEXT, "
                                                         + "  FOREIGN KEY (venue_id) REFERENCES venues(id),"
                                                         + "  FOREIGN KEY (organizer_id) REFERENCES users(id)"
                                                         + ")");
@@ -185,51 +188,60 @@ public class DatabaseManager {
                                 "INSERT OR IGNORE INTO events "
                                                 + "(id, type, name, venue_id, organizer_id, date, base_price) "
                                                 + "VALUES "
-                                                + "('EVT-001','concert','Coldplay Music of The Spheres','VNU-001','USR-001','2026-08-20',1500000)");
+                                                + "('EVT-001','concert','Bali Music Festival 2026','VNU-001','USR-001','2027-08-15',250000)");
 
                 stmt.execute(
                                 "INSERT OR IGNORE INTO events "
                                                 + "(id, type, name, venue_id, organizer_id, date, base_price) "
                                                 + "VALUES "
-                                                + "('EVT-002','seminar','AI Future Summit 2026','VNU-002','USR-002','2026-09-10',250000)");
+                                                + "('EVT-002','seminar','AI Future Summit 2026','VNU-002','USR-002','2027-09-10',250000)");
 
                 stmt.execute(
                                 "INSERT OR IGNORE INTO events "
                                                 + "(id, type, name, venue_id, organizer_id, date, base_price) "
                                                 + "VALUES "
-                                                + "('EVT-003','sport_match','Bali United vs Persija','VNU-003','USR-001','2026-10-15',100000)");
+                                                + "('EVT-003','sport_match','Bali United vs Persija','VNU-003','USR-001','2027-10-15',100000)");
 
                 // Data Dummy Tickets
                 stmt.execute(
                                 "INSERT OR IGNORE INTO tickets "
-                                                + "(id, event_id, user_id, category, quantity, unit_price, total_price, status, refund_amount) "
+                                                + "(id, event_id, user_id, category, quantity, unit_price, total_price, purchase_date, status, refund_amount) "
                                                 + "VALUES "
-                                                + "('TKT-001','EVT-001','USR-003','VIP',1,4500000,4500000,'active',0)");
+                                                + "('TKT-001','EVT-001','USR-003','VIP',2,750000,1500000,'2026-06-26','active',0)");
 
                 stmt.execute(
                                 "INSERT OR IGNORE INTO tickets "
-                                                + "(id, event_id, user_id, category, quantity, unit_price, total_price, status, refund_amount) "
+                                                + "(id, event_id, user_id, category, quantity, unit_price, total_price, purchase_date, status, refund_amount) "
                                                 + "VALUES "
-                                                + "('TKT-002','EVT-002','USR-004','Regular',2,250000,500000,'active',0)");
+                                                + "('TKT-002','EVT-002','USR-004','Regular',2,250000,500000,'2026-06-26','active',0)");
+                stmt.execute(
+                                "INSERT OR IGNORE INTO tickets "
+                                                + "(id, event_id, user_id, category, quantity, unit_price, total_price, purchase_date, status, refund_amount) "
+                                                + "VALUES "
+                                                + "('TKT-003','EVT-003','USR-003','VIP',1,250000,250000,'2026-06-26','active',0)");
 
                 // Data Dummy Capacities
                 stmt.execute(
-                                "INSERT OR IGNORE INTO capacities "
-                                                + "(event_id, category, total, filled) "
-                                                + "VALUES "
-                                                + "('EVT-001','VIP',100,20)");
+                                "INSERT OR IGNORE INTO capacities (event_id, category, total, filled) VALUES ('EVT-001','VIP',100,10)");
 
                 stmt.execute(
-                                "INSERT OR IGNORE INTO capacities "
-                                                + "(event_id, category, total, filled) "
-                                                + "VALUES "
-                                                + "('EVT-001','Festival',500,150)");
+                                "INSERT OR IGNORE INTO capacities (event_id, category, total, filled) VALUES ('EVT-001','Regular',500,50)");
 
                 stmt.execute(
-                                "INSERT OR IGNORE INTO capacities "
-                                                + "(event_id, category, total, filled) "
-                                                + "VALUES "
-                                                + "('EVT-003','VVIP',50,10)");
+                                "INSERT OR IGNORE INTO capacities (event_id, category, total,filled) VALUES ('EVT-001','Festival',1000,100)");
+
+                stmt.execute(
+                                "INSERT OR IGNORE INTO capacities (event_id, category, total, filled) VALUES ('EVT-002','Regular',200,20)");
+
+                stmt.execute(
+                                "INSERT OR IGNORE INTO capacities (event_id, category, total, filled) VALUES ('EVT-003','Tribune',1000,100)");
+
+                stmt.execute(
+                                "INSERT OR IGNORE INTO capacities (event_id, category, total, filled) VALUES ('EVT-003','VIP',200,20)");
+
+                stmt.execute(
+                                "INSERT OR IGNORE INTO capacities (event_id, category, total, filled) VALUES ('EVT-003','VVIP',50,5)");
+
                 System.out.println("Seed data berhasil dijalankan");
         }
 }

@@ -153,6 +153,12 @@ public class App {
                 server.get(
                                 "/api/events",
                                 EventHandler::getAllEvents);
+                server.get(
+                                "/api/events/price-summary",
+                                EventHandler::getPriceSummary);
+                server.get(
+                                "/api/reports/sales",
+                                EventHandler::getSalesReport);
 
                 server.get(
                                 "/api/events/{id}",
@@ -191,10 +197,10 @@ public class App {
                                 TicketHandler::getTicketById);
 
                 server.post(
-                                "/api/tickets/purchase",
+                                "/api/tickets",
                                 TicketHandler::purchaseTicket);
 
-                server.post(
+                server.put(
                                 "/api/tickets/{id}/refund",
                                 TicketHandler::processRefund);
 

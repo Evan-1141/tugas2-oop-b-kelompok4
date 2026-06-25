@@ -1,17 +1,19 @@
 package repository;
+
 import model.User;
 import database.DatabaseManager;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 public class UserRepository {
-    
+
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users";
         try (Connection conn = DatabaseManager.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 users.add(mapRow(rs));
             }
@@ -24,7 +26,7 @@ public class UserRepository {
     public User findById(String id) {
         String sql = "SELECT * FROM users WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -41,7 +43,7 @@ public class UserRepository {
         List<User> users = new ArrayList<>();
         String sql = "SELECT * FROM users WHERE role = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, role);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
@@ -55,16 +57,17 @@ public class UserRepository {
     }
 
     public boolean save(User user) {
-        String sql = "INSERT INTO users (id, name, email, phone, role, created_at) "
-                   + "VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (id, name, email, phone, role, created_at, updated_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getId());
             ps.setString(2, user.getName());
             ps.setString(3, user.getEmail());
-            ps.setString(4, user.getPhone());   // nullable — setString handles null
+            ps.setString(4, user.getPhone());
             ps.setString(5, user.getRole());
             ps.setString(6, user.getCreatedAt());
+            ps.setString(7, user.getUpdatedAt());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error save user: " + e.getMessage());
@@ -73,15 +76,16 @@ public class UserRepository {
     }
 
     public boolean update(User user) {
-        String sql = "UPDATE users SET name = ?, email = ?, phone = ?, role = ? "
-                   + "WHERE id = ?";
+        String sql = "UPDATE users SET name = ?, email = ?, phone = ?, role = ?, updated_at = ? "
+                + "WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getName());
             ps.setString(2, user.getEmail());
             ps.setString(3, user.getPhone());
             ps.setString(4, user.getRole());
-            ps.setString(5, user.getId());
+            ps.setString(5, user.getUpdatedAt());
+            ps.setString(6, user.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error update user: " + e.getMessage());
@@ -92,7 +96,7 @@ public class UserRepository {
     public boolean existsByEmail(String email) {
         String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -108,8 +112,8 @@ public class UserRepository {
     public String generateId() {
         String sql = "SELECT id FROM users ORDER BY id DESC LIMIT 1";
         try (Connection conn = DatabaseManager.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 String lastId = rs.getString("id");
                 int num = Integer.parseInt(lastId.split("-")[1]);
@@ -123,12 +127,12 @@ public class UserRepository {
 
     private User mapRow(ResultSet rs) throws SQLException {
         return new User(
-            rs.getString("id"),
-            rs.getString("name"),
-            rs.getString("email"),
-            rs.getString("phone"),
-            rs.getString("role"),
-            rs.getString("created_at")
-        );
+                rs.getString("id"),
+                rs.getString("name"),
+                rs.getString("email"),
+                rs.getString("phone"),
+                rs.getString("role"),
+                rs.getString("created_at"),
+                rs.getString("updated_at"));
     }
 }

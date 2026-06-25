@@ -5,6 +5,7 @@ import server.Response;
 import service.UserService;
 import model.User;
 import java.util.Map;
+import java.util.LinkedHashMap;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -29,13 +30,22 @@ public class UserHandler {
                 User user = userService.getUserById(id);
 
                 if (user == null) {
-                        res.sendError(
-                                        404,
-                                        "User tidak ditemukan");
+                        res.sendError(404, "User tidak ditemukan");
                         return;
                 }
 
-                res.sendSuccess(user);
+                Map<String, Object> data = new LinkedHashMap<>();
+
+                data.put("id", user.getId());
+                data.put("name", user.getName());
+                data.put("email", user.getEmail());
+                data.put("phone", user.getPhone());
+                data.put("role", user.getRole());
+                data.put("createdAt", user.getCreatedAt());
+                data.put("updatedAt", user.getUpdatedAt());
+                data.put("summary", userService.getUserSummary(user));
+
+                res.sendSuccess(data);
         }
 
         public static void createUser(
@@ -45,6 +55,7 @@ public class UserHandler {
                                 "yyyy-MM-dd HH:mm:ss");
 
                 String createdAt = LocalDateTime.now().format(formatter);
+                String updatedAt = null;
 
                 try {
 
@@ -75,10 +86,11 @@ public class UserHandler {
                                         email,
                                         phone,
                                         role,
-                                        createdAt);
+                                        createdAt,
+                                        updatedAt);
 
                         if (userService.createUser(user)) {
-                                res.sendSuccess(user);
+                                res.sendCreated(user);
                         } else {
                                 res.sendError(
                                                 500,
@@ -98,6 +110,8 @@ public class UserHandler {
                         Response res) {
 
                 try {
+                        String updatedAt = LocalDateTime.now().format(
+                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
                         String id = req.getPathParam("id");
 
@@ -130,7 +144,8 @@ public class UserHandler {
                                         email != null ? email : oldUser.getEmail(),
                                         phone != null ? phone : oldUser.getPhone(),
                                         role != null ? role : oldUser.getRole(),
-                                        oldUser.getCreatedAt());
+                                        oldUser.getCreatedAt(),
+                                        updatedAt);
 
                         if (userService.updateUser(user)) {
                                 res.sendSuccess(user);

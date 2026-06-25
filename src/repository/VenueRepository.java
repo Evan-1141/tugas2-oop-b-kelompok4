@@ -1,4 +1,5 @@
 package repository;
+
 import model.Venue;
 import database.DatabaseManager;
 import java.sql.*;
@@ -6,13 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VenueRepository {
-    
+
     public List<Venue> findAll() {
         List<Venue> venues = new ArrayList<>();
         String sql = "SELECT * FROM venues";
         try (Connection conn = DatabaseManager.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             while (rs.next()) {
                 venues.add(mapRow(rs));
             }
@@ -25,7 +26,7 @@ public class VenueRepository {
     public Venue findById(String id) {
         String sql = "SELECT * FROM venues WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -39,15 +40,16 @@ public class VenueRepository {
     }
 
     public boolean save(Venue venue) {
-        String sql = "INSERT INTO venues (id, name, address, max_capacity, created_at) "
-                   + "VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO venues (id, name, address, max_capacity, created_at, updated_at) "
+                + "VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, venue.getId());
             ps.setString(2, venue.getName());
             ps.setString(3, venue.getAddress());
             ps.setInt(4, venue.getMaxCapacity());
             ps.setString(5, venue.getCreatedAt());
+            ps.setString(6, venue.getUpdatedAt());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error save venue: " + e.getMessage());
@@ -56,14 +58,15 @@ public class VenueRepository {
     }
 
     public boolean update(Venue venue) {
-        String sql = "UPDATE venues SET name = ?, address = ?, max_capacity = ? "
-                   + "WHERE id = ?";
+        String sql = "UPDATE venues SET name = ?, address = ?, max_capacity = ?, updated_at = ? "
+                + "WHERE id = ?";
         try (Connection conn = DatabaseManager.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, venue.getName());
             ps.setString(2, venue.getAddress());
             ps.setInt(3, venue.getMaxCapacity());
-            ps.setString(4, venue.getId());
+            ps.setString(4, venue.getUpdatedAt());
+            ps.setString(5, venue.getId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
             System.err.println("Error update venue: " + e.getMessage());
@@ -74,8 +77,8 @@ public class VenueRepository {
     public String generateId() {
         String sql = "SELECT id FROM venues ORDER BY id DESC LIMIT 1";
         try (Connection conn = DatabaseManager.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
             if (rs.next()) {
                 String lastId = rs.getString("id");
                 int num = Integer.parseInt(lastId.split("-")[1]);
@@ -89,11 +92,11 @@ public class VenueRepository {
 
     private Venue mapRow(ResultSet rs) throws SQLException {
         return new Venue(
-            rs.getString("id"),
-            rs.getString("name"),
-            rs.getString("address"),
-            rs.getInt("max_capacity"), 
-            rs.getString("created_at")
-        );
+                rs.getString("id"),
+                rs.getString("name"),
+                rs.getString("address"),
+                rs.getInt("max_capacity"),
+                rs.getString("created_at"),
+                rs.getString("updated_at"));
     }
 }

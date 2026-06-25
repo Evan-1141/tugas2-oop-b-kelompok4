@@ -7,9 +7,10 @@ public class Venue {
     private String address;
     private int maxCapacity;
     private String createdAt;
+    private String updatedAt;
 
     public Venue(String id, String name, String address,
-                 int maxCapacity, String createdAt) {
+            int maxCapacity, String createdAt, String updatedAt) {
 
         if (maxCapacity < 0) {
             throw new IllegalArgumentException(
@@ -21,6 +22,7 @@ public class Venue {
         this.address = address;
         this.maxCapacity = maxCapacity;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getId() {
@@ -43,6 +45,10 @@ public class Venue {
         return createdAt;
     }
 
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -61,6 +67,10 @@ public class Venue {
 
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     @Override
