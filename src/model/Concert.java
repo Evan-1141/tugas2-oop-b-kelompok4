@@ -43,11 +43,11 @@ public class Concert extends Event
     public double calculateRefund(int daysBeforeEvent) {
 
         if (daysBeforeEvent > 14) {
-            return getBasePrice() * 1.0;
+            return 1.0;
         }
 
         if (daysBeforeEvent >= 7 && daysBeforeEvent <= 14) {
-            return getBasePrice() * 0.5;
+            return 0.5;
         }
 
         return 0;

@@ -31,7 +31,7 @@ public class Seminar extends Event
     public double calculateRefund(int daysBeforeEvent) {
 
         if (daysBeforeEvent > 1) {
-            return getBasePrice() * 1.0;
+            return 1.0;
         }
 
         return 0;

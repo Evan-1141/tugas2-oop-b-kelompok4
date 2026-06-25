@@ -77,10 +77,11 @@ public class TicketService {
 
         }
 
-        double refundAmount = ((Refundable) event).calculateRefund(daysBeforeEvent);
+        double refundPercentage = ((Refundable) event).calculateRefund(daysBeforeEvent);
+        double refundAmount = ticket.getTotalPrice() * refundPercentage;
 
         ticket.setRefundAmount(refundAmount);
-        ticket.setStatus("REFUNDED");
+        ticket.setStatus("refunded");
 
         return ticketRepository.update(ticket);
     }

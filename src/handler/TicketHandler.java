@@ -68,7 +68,7 @@ public class TicketHandler {
 
         Ticket ticket = new Ticket(
                 null, eventId, userId, category, quantity,
-                0, 0, null, "ACTIVE", 0
+                0, 0, null, "active", 0
         );
 
         try {
@@ -92,7 +92,7 @@ public class TicketHandler {
             return;
         }
 
-        if ("REFUNDED".equals(ticket.getStatus())) {
+        if ("refunded".equals(ticket.getStatus())) {
             res.sendError(400, "Tiket sudah di-refund sebelumnya");
             return;
         }
