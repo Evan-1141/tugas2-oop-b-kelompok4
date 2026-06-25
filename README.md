@@ -23,7 +23,7 @@ Fitur utama yang tersedia meliputi:
 ### 1. Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone <https://github.com/Evan-1141/tugas2-oop-b-kelompok4.git>
 ```
 
 ### 2. Masuk ke Folder Project
