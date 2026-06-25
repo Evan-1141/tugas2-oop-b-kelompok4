@@ -9,6 +9,7 @@ import database.DatabaseManager;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -351,5 +352,43 @@ public class EventRepository {
                 System.err.println("Tipe event tidak dikenal: " + type);
                 return null;
         }
+    }
+
+    public Map<String, Integer> getRemainingCapacity(String eventId) {
+
+        Map<String, Integer> capacities = new LinkedHashMap<>();
+
+        String sql = "SELECT category, total, filled "
+                + "FROM capacities "
+                + "WHERE event_id = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, eventId);
+
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+
+                String category = rs.getString("category");
+
+                int total = rs.getInt("total");
+
+                int filled = rs.getInt("filled");
+
+                capacities.put(
+                        category.toLowerCase(),
+                        total - filled);
+
+            }
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+
+        }
+
+        return capacities;
     }
 }

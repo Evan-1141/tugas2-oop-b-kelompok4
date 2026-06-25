@@ -69,7 +69,9 @@ public class EventHandler {
                         }
 
                         data.put("priceList", priceList);
-
+                        data.put(
+                                        "remainingCapacity",
+                                        eventService.getRemainingCapacity(event.getId()));
                         data.put("createdAt", event.getCreatedAt());
                         data.put("updatedAt", event.getUpdatedAt());
 

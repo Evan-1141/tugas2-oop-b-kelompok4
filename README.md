@@ -399,6 +399,11 @@ GET /api/events/EVT-001
             "regular":250000,
             "festival":175000
         },
+        "remainingCapacity": {
+            "vip": 90,
+            "regular": 350,
+            "festival": 850
+        },
         "refundable":true,
         "refundPolicy":"100% if >14 days, 50% if 7-14 days, 0% if <7 days"
     }

@@ -195,4 +195,10 @@ public class EventService {
         return data;
     }
 
+    public Map<String, Integer> getRemainingCapacity(String eventId) {
+
+        return eventRepository.getRemainingCapacity(eventId);
+
+    }
+
 }
