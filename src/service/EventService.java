@@ -33,6 +33,10 @@ public class EventService {
         return eventRepository.save(event);
     }
 
+    public String generateId() {
+        return eventRepository.generateId();
+    }
+
     public boolean updateEvent(Event event) {
 
         if (eventRepository.findById(event.getId()) == null) {

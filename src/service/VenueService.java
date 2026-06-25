@@ -24,6 +24,10 @@ public class VenueService {
         return venueRepository.save(venue);
     }
 
+    public String generateId() {
+        return venueRepository.generateId();
+    }
+
     public boolean updateVenue(Venue venue) {
         return venueRepository.update(venue);
     }
