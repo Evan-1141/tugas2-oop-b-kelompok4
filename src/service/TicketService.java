@@ -8,6 +8,8 @@ import model.Refundable;
 import exception.EventNotFoundException;
 import exception.RefundNotAllowedException;
 import java.util.List;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 public class TicketService {
 
@@ -38,6 +40,13 @@ public class TicketService {
                             + " tidak ditemukan.");
         }
 
+        ticket.setId(ticketRepository.generateId());
+
+        double unitPrice = event.calculateTicketPrice(ticket.getCategory());
+        ticket.setUnitPrice(unitPrice);
+        ticket.setTotalPrice(unitPrice * ticket.getQuantity());
+        ticket.setPurchaseDate(LocalDate.now().toString());
+
         return ticketRepository.save(ticket);
     }
 
@@ -58,6 +67,20 @@ public class TicketService {
                     "Event " + event.getName()
                             + " tidak menerima refund");
         }
+
+        int daysBeforeEvent = 0;
+        try {
+            LocalDate eventDate = LocalDate.parse(event.getDate());
+            LocalDate today = LocalDate.now();
+            daysBeforeEvent = (int) ChronoUnit.DAYS.between(today, eventDate);
+        } catch (Exception e) {
+
+        }
+
+        double refundAmount = ((Refundable) event).calculateRefund(daysBeforeEvent);
+
+        ticket.setRefundAmount(refundAmount);
+        ticket.setStatus("REFUNDED");
 
         return ticketRepository.update(ticket);
     }

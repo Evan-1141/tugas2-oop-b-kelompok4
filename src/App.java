@@ -163,6 +163,14 @@ public class App {
                 "/api/tickets/{id}",
                 TicketHandler::getTicketById);
 
+        server.post(
+                "/api/tickets/purchase",
+                TicketHandler::purchaseTicket);
+
+        server.post(
+                "/api/tickets/{id}/refund",
+                TicketHandler::processRefund);
+
         // Jalankan server
         System.out.printf("Server berjalan di http://localhost:%d%n", port);
         System.out.println("Tekan Ctrl+C untuk menghentikan server.\n");
